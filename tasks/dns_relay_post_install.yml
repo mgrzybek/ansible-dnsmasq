@@ -1,0 +1,20 @@
+---
+
+- name: Disable systemd-resolv.service
+  service: name=systemd-resolved.service state=stopped enabled=no
+  when: disable_resolvd == true
+
+- name: Main configuration
+  template: src=dnsmasq.conf.j2 dest=/etc/dnsmasq.d/main
+  notify: restart dnsmasq
+
+- name: Forwarding zones configuration
+  template: src=dnsmasq.zone.conf.j2 dest=/etc/dnsmasq.d/{{ item.name }}
+  with_items: "{{ dnsmasq_forwarding_zones }}"
+  notify: restart dnsmasq
+
+- name: Set localhost as DNS service
+  lineinfile:
+    path: /etc/resolv.conf
+    regex: "^nameserver"
+    line: "nameserver 127.0.0.1"

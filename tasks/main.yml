@@ -1,0 +1,33 @@
+---
+# tasks file for ansible-dnsmasq
+
+- block:
+   - name: Check mandatory variables
+     fail: msg="{{ item }} must be given"
+     when: item is not defined or item == None
+     with_items:
+       - "{{ dnsmasq_main_conf }}"
+       - "{{ dnsmasq_main_conf.servers }}"
+
+- name: OS-specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  tags:
+    - always
+
+- include: dnsmasq_pre_install.yml
+  tags:
+    - dnsmasq-pre-install
+
+- include: dnsmasq_install.yml
+  tags:
+    - dnsmasq-install
+
+- include: dnsmasq_post_install.yml
+  tags:
+    - dnsmasq-post-install

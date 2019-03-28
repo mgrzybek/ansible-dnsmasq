@@ -1,0 +1,12 @@
+---
+
+- name: Check systemd-resolvd
+  shell: systemctl is-active systemd-resolved.service || echo ko
+  register: resolvd_result
+
+- set_fact:
+    disable_resolvd: false
+
+- set_fact:
+    disable_resolvd: true
+    when: resolvd_result.stdout.find('ko') < 0

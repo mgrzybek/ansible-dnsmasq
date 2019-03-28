@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+# Enable forward lookup of the '{{ item.name }}' domain:
+server=/{{ item.name }}/{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+
+# Uncomment and modify as appropriate to enable reverse DNS lookups for
+# common netblocks found in RFC 1918, 5735, and 6598:
+#rev-server=0.0.0.0/8,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+#rev-server=10.0.0.0/8,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+#rev-server=100.64.0.0/10,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+#rev-server=127.0.0.1/8,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+#rev-server=169.254.0.0/16,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+#rev-server=172.16.0.0/12,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+#rev-server=192.168.0.0/16,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+#rev-server=224.0.0.0/4,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}
+#rev-server=240.0.0.0/4,{{ item.forwarder.hostname }}#{{ item.forwarder.port }}

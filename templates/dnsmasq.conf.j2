@@ -1,0 +1,32 @@
+# {{ ansible_managed }}
+# Accept DNS queries only from hosts whose address is on a local subnet.
+#local-service
+
+# Don't poll /etc/resolv.conf for changes.
+#no-poll
+
+# Don't read /etc/resolv.conf. Get upstream servers only from the command
+# line or the dnsmasq configuration file (see the "server" directive below).
+#no-resolv
+
+# Specify IP address(es) of other DNS servers for queries not handled
+# directly by consul. There is normally one 'server' entry set for every
+# 'nameserver' parameter found in '/etc/resolv.conf'. See dnsmasq(8)'s
+# 'server' configuration option for details.
+{% if dnsmasq_main_conf.servers != None %}
+{% for server in dnsmasq_main_conf.servers %}
+server={{ server }}
+{% endfor %}
+{% endif %}
+
+# Set the size of dnsmasq's cache. The default is 150 names. Setting the
+# cache size to zero disables caching.
+{% if dnsmasq_main_conf.cache_size is defined %}
+cache-size={{ dnsmasq_main_conf.cache_size }}
+{% endif %}
+
+{% for item in dnsmasq_listening_interfaces %}
+interface={{ item }}
+{% endfor %}
+
+bind-interfaces

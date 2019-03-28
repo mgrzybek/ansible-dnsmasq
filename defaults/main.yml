@@ -1,0 +1,16 @@
+---
+# defaults file for ansible-dnsmasq
+
+dnsmasq_package_state: present
+cache_timeout: 600
+
+dnsmasq_service: dnsmasq
+
+dnsmasq_allow_query_address: localhost
+dnsmasq_listening_port: 53
+dnsmasq_listening_address: any
+
+dnsmasq_zones: []
+dnsmasq_forwarding_zones: []
+
+dnsmasq_listening_interfaces: []
