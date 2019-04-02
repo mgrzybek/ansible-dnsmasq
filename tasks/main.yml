@@ -2,12 +2,12 @@
 # tasks file for ansible-dnsmasq
 
 - block:
-   - name: Check mandatory variables
-     fail: msg="{{ item }} must be given"
-     when: item is not defined or item == None
-     with_items:
-       - "{{ dnsmasq_main_conf }}"
-       - "{{ dnsmasq_main_conf.servers }}"
+    - name: Check mandatory variables
+      fail: msg="{{ item }} must be given"
+      when: item is not defined or item == None
+      with_items:
+        - "{{ dnsmasq_main_conf }}"
+        - "{{ dnsmasq_main_conf.servers }}"
 
 - name: OS-specific variables
   include_vars: "{{ item }}"

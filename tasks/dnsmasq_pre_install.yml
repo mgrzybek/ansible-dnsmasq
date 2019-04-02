@@ -7,6 +7,6 @@
 - set_fact:
     disable_resolvd: false
 
-- set_fact:
+- when: resolvd_result.stdout.find('ko') < 0
+  set_fact:
     disable_resolvd: true
-    when: resolvd_result.stdout.find('ko') < 0
