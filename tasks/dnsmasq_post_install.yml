@@ -16,5 +16,5 @@
 - name: Set localhost as DNS service
   lineinfile:
     path: /etc/resolv.conf
-    regex: "^nameserver"
+    regexp: "^nameserver"
     line: "nameserver 127.0.0.1"
