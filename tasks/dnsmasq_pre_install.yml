@@ -25,7 +25,7 @@
     configure_nm: true
 
 - name: Check docker interface in dnsmasq_listening_interfaces
-  when: "'dnsmasq_listening_interfaces' in dnsmasq_listening_interfaces"
+  when: "'docker0' in dnsmasq_listening_interfaces"
   set_fact:
     start_dnsmasq_after_docker: true
 
