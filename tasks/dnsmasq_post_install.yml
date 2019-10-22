@@ -11,7 +11,7 @@
        register: resolv_result
 
      - name: Delete symlink /etc/resolv.conf
-       when: resolv_result.stat.islnk | lower = 'true'
+       when: resolv_result.stat.islnk | lower == 'true'
        file: state=absent path=/etc/resolv.conf
 
      - name: Set dns to none in Network Manager
