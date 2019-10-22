@@ -1,8 +1,32 @@
 ---
 
 - name: Disable systemd-resolv.service
-  service: name=systemd-resolved.service state=stopped enabled=no
-  when: disable_resolvd == true
+  when: disable_resolvd | lower == 'true'
+  block:
+     - name: Disable systemd-resolved.service
+       service: name=systemd-resolved.service state=stopped enabled=no
+
+     - name: Check /etc/resolv.conf
+       stat: path=/etc/resolv.conf
+       register: resolv_result
+
+     - name: Delete symlink /etc/resolv.conf
+       when: resolv_result.stat.islnk | lower = 'true'
+       file: state=absent path=/etc/resolv.conf
+
+     - name: Set dns to none in Network Manager
+       when: configure_nm | lower == 'true'
+       ini_file:
+          path: /etc/NetworkManager/conf.d/disableresolv.conf
+          section: main
+          option: dns
+          value: none
+
+- name: Set localhost as DNS service
+  lineinfile:
+    path: /etc/resolv.conf
+    regexp: "^nameserver"
+    line: "nameserver 127.0.0.1"
 
 - name: Main configuration
   template: src=dnsmasq.conf.j2 dest=/etc/dnsmasq.d/main
@@ -13,8 +37,15 @@
   with_items: "{{ dnsmasq_forwarding_zones }}"
   notify: restart dnsmasq
 
-- name: Set localhost as DNS service
-  lineinfile:
-    path: /etc/resolv.conf
-    regexp: "^nameserver"
-    line: "nameserver 127.0.0.1"
+- name: Start dnsmasq after docker daemon
+  when: start_dnsmasq_after_docker | lower == 'true'
+  block:
+     - name: Create /etc/systemd/systemd/dnsmasq.service.wants
+       file: path=/etc/systemd/systemd/dnsmasq.service.wants state=directory
+
+     - name: Add systemd service symlink for docker
+       notify: reload systemd
+       file:
+          state: link
+          dest: /etc/systemd/systemd/dnsmasq.service.wants/docker.service
+          src: /lib/systemd/system/docker.service

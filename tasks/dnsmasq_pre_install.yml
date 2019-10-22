@@ -1,12 +1,31 @@
 ---
 
 - name: Check systemd-resolvd
-  shell: systemctl is-active systemd-resolved.service || echo ko
+  systemd: name=systemd-resolved.service
   register: resolvd_result
 
-- set_fact:
-    disable_resolvd: false
+- name: Check Network Manager
+  systemd: name=NetworkManager.service
+  register: nm_result
 
-- when: resolvd_result.stdout.find('ko') < 0
+- name: Set default local facts
+  set_fact:
+    configure_nm: false
+    disable_resolvd: false
+    start_dnsmasq_after_docker: false
+
+- name: Set fact to disable systemd-resolved
+  when: resolvd_result.status.ActiveState | lower == 'active'
   set_fact:
     disable_resolvd: true
+
+- name: Set fact to configure Network Manager
+  when: nm_result.status.ActiveState | lower == 'active'
+  set_fact:
+    configure_nm: true
+
+- name: Check docker interface in dnsmasq_listening_interfaces
+  when: "'dnsmasq_listening_interfaces' in dnsmasq_listening_interfaces"
+  set_fact:
+    start_dnsmasq_after_docker: true
+
