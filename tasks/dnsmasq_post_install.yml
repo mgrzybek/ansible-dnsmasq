@@ -40,8 +40,8 @@
 - name: Start dnsmasq after docker daemon
   when: start_dnsmasq_after_docker | lower == 'true'
   block:
-     - name: Create /etc/systemd/systemd/dnsmasq.service.wants
-       file: path=/etc/systemd/systemd/dnsmasq.service.wants state=directory
+     - name: Create /etc/systemd/system/dnsmasq.service.wants
+       file: path=/etc/systemd/system/dnsmasq.service.wants state=directory
 
      - name: Add systemd service symlink for docker
        notify: reload systemd
