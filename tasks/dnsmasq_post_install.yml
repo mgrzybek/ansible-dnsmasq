@@ -36,16 +36,3 @@
   template: src=dnsmasq.zone.conf.j2 dest=/etc/dnsmasq.d/{{ item.name }}
   with_items: "{{ dnsmasq_forwarding_zones }}"
   notify: restart dnsmasq
-
-- name: Start dnsmasq after docker daemon
-  when: start_dnsmasq_after_docker | lower == 'true'
-  block:
-     - name: Create /etc/systemd/system/dnsmasq.service.wants
-       file: path=/etc/systemd/system/dnsmasq.service.wants state=directory
-
-     - name: Add systemd service symlink for docker
-       notify: reload systemd
-       file:
-          state: link
-          dest: /etc/systemd/system/dnsmasq.service.wants/docker.service
-          src: /lib/systemd/system/docker.service

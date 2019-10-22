@@ -1,13 +1,13 @@
 # {{ ansible_managed }}
 # Accept DNS queries only from hosts whose address is on a local subnet.
-#local-service
+local-service
 
 # Don't poll /etc/resolv.conf for changes.
-#no-poll
+no-poll
 
 # Don't read /etc/resolv.conf. Get upstream servers only from the command
 # line or the dnsmasq configuration file (see the "server" directive below).
-#no-resolv
+no-resolv
 
 # Specify IP address(es) of other DNS servers for queries not handled
 # directly by consul. There is normally one 'server' entry set for every

@@ -23,9 +23,3 @@
   when: nm_result.status.ActiveState | lower == 'active'
   set_fact:
     configure_nm: true
-
-- name: Check docker interface in dnsmasq_listening_interfaces
-  when: "'docker0' in dnsmasq_listening_interfaces"
-  set_fact:
-    start_dnsmasq_after_docker: true
-
