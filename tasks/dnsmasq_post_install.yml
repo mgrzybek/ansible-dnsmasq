@@ -47,5 +47,5 @@
        notify: reload systemd
        file:
           state: link
-          dest: /etc/systemd/systemd/dnsmasq.service.wants/docker.service
+          dest: /etc/systemd/system/dnsmasq.service.wants/docker.service
           src: /lib/systemd/system/docker.service
