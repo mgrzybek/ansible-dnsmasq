@@ -27,6 +27,7 @@
     path: /etc/resolv.conf
     regexp: "^nameserver"
     line: "nameserver 127.0.0.1"
+    create: yes
 
 - name: Main configuration
   template: src=dnsmasq.conf.j2 dest=/etc/dnsmasq.d/main
