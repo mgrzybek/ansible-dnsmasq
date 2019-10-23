@@ -1,0 +1,19 @@
+{
+    "service": {
+        "checks": [
+            {
+                "args": [
+                    "dig",
+                    "@localhost",
+                    "{{ dnsmasq_monitoring_queries | join(",") }}"
+                ],
+                "interval": "60s"
+            }
+        ],
+        "enable_tag_override": false,
+        "name": "dns-queries",
+        "tags": [
+            "dns"
+        ]
+    }
+}

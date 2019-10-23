@@ -23,7 +23,6 @@ dnsmasq_consul:
         name: "dnsmasq"
         tags:
             - "dns"
-            - "traefik.enable=false"
         checks:
             - args:
                 - "systemctl"
