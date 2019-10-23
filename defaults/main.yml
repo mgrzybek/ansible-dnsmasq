@@ -30,12 +30,12 @@ dnsmasq_consul:
                 - "status"
                 - "{{ dnsmasq_service }}"
               interval: "60s"
-#{% if dnsmasq_monitoring_queries is defined %}
-#{% for query in dnsmasq_monitoring_queries %}
-#            - args:
-#                - "dig"
-#                - "@localhost"
-#                - "{{ query }}"
-#              interval: "60s"
-#{% endfor %}
-#{% endif %}
+{% if dnsmasq_monitoring_queries is defined %}
+{% for query in dnsmasq_monitoring_queries %}
+            - args:
+                - "dig"
+                - "@localhost"
+                - "{{ query }}"
+              interval: "60s"
+{% endfor %}
+{% endif %}
