@@ -5,7 +5,7 @@
 {
     "service": {
         "checks": [
-{{ queries | join(',\n') }}
+{{ queries | map('quote') | join(',\n') }}
         ],
         "enable_tag_override": false,
         "name": "dns-queries",
