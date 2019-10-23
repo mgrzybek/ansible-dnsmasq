@@ -1,14 +1,16 @@
 {
     "service": {
         "checks": [
+{% for query in dnsmasq_monitoring_queries %}
             {
                 "args": [
-                    "dig",
-                    "@localhost",
-                    "{{ dnsmasq_monitoring_queries | join(",") }}"
+                    "host",
+                    "{{ query }}",
+                    "localhost"
                 ],
                 "interval": "60s"
-            }
+            },
+{% endfor %}
         ],
         "enable_tag_override": false,
         "name": "dns-queries",
