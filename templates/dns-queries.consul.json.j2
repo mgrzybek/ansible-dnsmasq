@@ -1,12 +1,14 @@
 {% set queries = [] %}
 {% for query in dnsmasq_monitoring_queries %}
-{%     set _ = queries.extend('{ "args": [ "host", "{{ query }}", "localhost" ], "interval": "60s" }') %}
+{%     set line = '' %}
+{%     set line = line + '{ "args": [ "host", "' %}
+{%     set line = line + query %}
+{%     set line = line + '", "localhost" ], "interval": "60s" }' %}
+{%     set _ = queries.append(line) %}
 {% endfor %}
 {
     "service": {
-        "checks": [
-{{ queries | map('quote') | join(',\n') }}
-        ],
+        "checks": {{ queries | regex_replace("'","")}},
         "enable_tag_override": false,
         "name": "dns-queries",
         "tags": [
