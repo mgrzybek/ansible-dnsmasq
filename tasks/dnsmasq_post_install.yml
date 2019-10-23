@@ -48,5 +48,5 @@
         notify: reload consul
 
       - name: Create consul DNS queries service
-        template: src=service.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/dns-queries.json
+        template: src=dns-queries.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/dns-queries.json
         notify: reload consul
