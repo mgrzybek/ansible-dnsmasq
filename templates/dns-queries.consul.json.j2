@@ -1,16 +1,11 @@
+{% set queries = [] %}
+{% for query in dnsmasq_monitoring_queries %}
+{%     set _ = queries.extend('{ "args": [ "host", "{{ query }}", "localhost" ], "interval": "60s" }') %}
+{% endfor %}
 {
     "service": {
         "checks": [
-{% for query in dnsmasq_monitoring_queries %}
-            {
-                "args": [
-                    "host",
-                    "{{ query }}",
-                    "localhost"
-                ],
-                "interval": "60s"
-            },
-{% endfor %}
+{{ queries | join(',\n') }}
         ],
         "enable_tag_override": false,
         "name": "dns-queries",
