@@ -8,11 +8,16 @@
   systemd: name=NetworkManager.service
   register: nm_result
 
+- name: Check Consul
+  systemd: name=consul.service
+  register: consul_result
+
 - name: Set default local facts
   set_fact:
     configure_nm: false
     disable_resolvd: false
     start_dnsmasq_after_docker: false
+    configure_consul: false
 
 - name: Set fact to disable systemd-resolved
   when: resolvd_result.status.ActiveState | lower == 'active'
@@ -23,3 +28,13 @@
   when: nm_result.status.ActiveState | lower == 'active'
   set_fact:
     configure_nm: true
+
+- name: Set fact to configure Consul
+  when:
+    - consul_result.status is defined
+    - consul_result.status.ActiveState is defined
+    - consul_result.status.ActiveState | lower == 'active'
+    - dnsmasq_consul is defined
+    - dnsmasq_consul | length > 0
+  set_fact:
+    configure_consul: true

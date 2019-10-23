@@ -14,3 +14,27 @@ dnsmasq_zones: []
 dnsmasq_forwarding_zones: []
 
 dnsmasq_listening_interfaces: []
+
+dnsmasq_monitoring_queries: []
+
+dnsmasq_consul:
+    - service:
+        name: "dnsmasq"
+        tags:
+            - "dns"
+            - "traefik.enable=false"
+        checks:
+            - args:
+                - "systemctl"
+                - "status"
+                - "{{ dnsmasq_service }}"
+              interval: "60s"
+#{% if dnsmasq_monitoring_queries is defined %}
+#{% for query in dnsmasq_monitoring_queries %}
+#            - args:
+#                - "dig"
+#                - "@localhost"
+#                - "{{ query }}"
+#              interval: "60s"
+#{% endfor %}
+#{% endif %}

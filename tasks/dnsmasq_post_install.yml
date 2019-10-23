@@ -37,3 +37,10 @@
   template: src=dnsmasq.zone.conf.j2 dest=/etc/dnsmasq.d/{{ item.name }}
   with_items: "{{ dnsmasq_forwarding_zones }}"
   notify: restart dnsmasq
+
+- name: Consul monitoring
+  when:
+    - configure_consul | lower == 'true'
+  template: src=service.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/{{ item.service.name }}.json
+  with_items: "{{ dnsmasq_consul }}"
+  notify: reload consul
