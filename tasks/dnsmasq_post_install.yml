@@ -41,6 +41,32 @@
 - name: Consul monitoring
   when:
     - configure_consul | lower == 'true'
-  template: src=service.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/{{ item.service.name }}.json
-  with_items: "{{ dnsmasq_consul }}"
-  notify: reload consul
+  block:
+      - name: Generate DNS queries to monitor
+        set_fact:
+            dns_queries:
+                - service:
+                  name: "dns-queries"
+                  tags:
+                      - "dns"
+                      - "traefik.enable=false"
+                  checks:
+{% if dnsmasq_monitoring_queries is defined %}
+{% for query in dnsmasq_monitoring_queries %}
+                      - interval: "60s"
+                        args:
+                            - "dig"
+                            - "@localhost"
+                            - "{{ query }}"
+{% endfor %}
+{% endif %}
+
+      - name: Create consul dnsmasq service
+        template: src=service.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/{{ item.service.name }}.json
+        with_items: "{{ dnsmasq_consul }}"
+        notify: reload consul
+
+      - name: Create consul DNS queries service
+        template: src=service.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/{{ item.service.name }}.json
+        with_items: "{{ dns_queries }}"
+        notify: reload consul
