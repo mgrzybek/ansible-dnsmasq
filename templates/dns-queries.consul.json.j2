@@ -8,7 +8,7 @@
 {% endfor %}
 {
     "service": {
-        "checks": {{ queries | regex_replace("'","")}},
+        "checks": {{ queries | regex_replace("'","") | regex_replace("u{", "{") }},
         "enable_tag_override": false,
         "name": "dns-queries",
         "tags": [
