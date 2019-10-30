@@ -8,4 +8,4 @@
   systemd: daemon_reload=yes
 
 - name: reload consul
-  service: name=consul states=reloaded
+  service: name=consul state=reloaded
