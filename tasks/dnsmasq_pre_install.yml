@@ -1,35 +1,35 @@
 ---
 
-- name: Check systemd-resolvd
+- name: Pre-Install | Check systemd-resolvd
   systemd: name=systemd-resolved.service
   register: resolvd_result
 
-- name: Check Network Manager
+- name: Pre-Install | Check Network Manager
   systemd: name=NetworkManager.service
   register: nm_result
 
-- name: Check Consul
+- name: Pre-Install | Check Consul
   systemd: name=consul.service
   register: consul_result
 
-- name: Set default local facts
+- name: Pre-Install | Set default local facts
   set_fact:
     configure_nm: false
     disable_resolvd: false
     start_dnsmasq_after_docker: false
     configure_consul: false
 
-- name: Set fact to disable systemd-resolved
+- name: Pre-Install | Set fact to disable systemd-resolved
   when: resolvd_result.status.ActiveState | lower == 'active'
   set_fact:
     disable_resolvd: true
 
-- name: Set fact to configure Network Manager
+- name: Pre-Install | Set fact to configure Network Manager
   when: nm_result.status.ActiveState | lower == 'active'
   set_fact:
     configure_nm: true
 
-- name: Set fact to configure Consul
+- name: Pre-Install | Set fact to configure Consul
   when:
     - consul_result.status is defined
     - consul_result.status.ActiveState is defined

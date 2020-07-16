@@ -1,6 +1,6 @@
 ---
 
-- name: Install dnsmasq packages
+- name: Install | Install dnsmasq packages
   package:
     name: "{{ dnsmasq_distro_packages_dnsmasq }}"
     state: "{{ dnsmasq_package_state }}"
