@@ -1,4 +1,3 @@
----
 # defaults file for ansible-dnsmasq
 
 dnsmasq_package_state: present
@@ -19,13 +18,13 @@ dnsmasq_monitoring_queries: []
 
 dnsmasq_consul_services_path: /etc/consul.d
 dnsmasq_consul:
-    - service:
-        name: "dnsmasq"
-        tags:
-            - "dns"
-        checks:
-            - args:
-                - "systemctl"
-                - "status"
-                - "{{ dnsmasq_service }}"
-              interval: "60s"
+- service:
+    name: dnsmasq
+    tags:
+    - dns
+    checks:
+    - args:
+      - systemctl
+      - status
+      - '{{ dnsmasq_service }}'
+      interval: 60s

@@ -1,7 +1,5 @@
----
-
 dnsmasq_distro_packages_dnsmasq:
-  - dnsmasq
+- dnsmasq
 
 dnsmasq_distro_packages_bind:
-  - bind
+- bind

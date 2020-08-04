@@ -1,5 +1,3 @@
----
-
 - name: Pre-Install | Check systemd-resolvd
   systemd: name=systemd-resolved.service
   register: resolvd_result
@@ -31,10 +29,10 @@
 
 - name: Pre-Install | Set fact to configure Consul
   when:
-    - consul_result.status is defined
-    - consul_result.status.ActiveState is defined
-    - consul_result.status.ActiveState | lower == 'active'
-    - dnsmasq_consul is defined
-    - dnsmasq_consul | length > 0
+  - consul_result.status is defined
+  - consul_result.status.ActiveState is defined
+  - consul_result.status.ActiveState | lower == 'active'
+  - dnsmasq_consul is defined
+  - dnsmasq_consul | length > 0
   set_fact:
     configure_consul: true

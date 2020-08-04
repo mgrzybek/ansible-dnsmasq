@@ -1,32 +1,30 @@
----
-
 - name: Post-Install | Disable systemd-resolv.service
   when: disable_resolvd | lower == 'true'
   block:
-     - name: Post-Install | Disable systemd-resolved.service
-       service: name=systemd-resolved.service state=stopped enabled=no
+  - name: Post-Install | Disable systemd-resolved.service
+    service: name=systemd-resolved.service state=stopped enabled=no
 
-     - name: Post-Install | Check /etc/resolv.conf
-       stat: path=/etc/resolv.conf
-       register: resolv_result
+  - name: Post-Install | Check /etc/resolv.conf
+    stat: path=/etc/resolv.conf
+    register: resolv_result
 
-     - name: Post-Install | Delete symlink /etc/resolv.conf
-       when: resolv_result.stat.islnk | lower == 'true'
-       file: state=absent path=/etc/resolv.conf
+  - name: Post-Install | Delete symlink /etc/resolv.conf
+    when: resolv_result.stat.islnk | lower == 'true'
+    file: state=absent path=/etc/resolv.conf
 
-     - name: Post-Install | Set dns to none in Network Manager
-       when: configure_nm | lower == 'true'
-       ini_file:
-          path: /etc/NetworkManager/conf.d/disableresolv.conf
-          section: main
-          option: dns
-          value: none
+  - name: Post-Install | Set dns to none in Network Manager
+    when: configure_nm | lower == 'true'
+    ini_file:
+      path: /etc/NetworkManager/conf.d/disableresolv.conf
+      section: main
+      option: dns
+      value: none
 
 - name: Post-Install | Set localhost as DNS service
   lineinfile:
     path: /etc/resolv.conf
-    regexp: "^nameserver"
-    line: "nameserver 127.0.0.1"
+    regexp: ^nameserver
+    line: nameserver 127.0.0.1
     create: yes
 
 - name: Post-Install | Main configuration
@@ -35,18 +33,18 @@
 
 - name: Post-Install | Forwarding zones configuration
   template: src=dnsmasq.zone.conf.j2 dest=/etc/dnsmasq.d/{{ item.name }}
-  with_items: "{{ dnsmasq_forwarding_zones }}"
+  with_items: '{{ dnsmasq_forwarding_zones }}'
   notify: restart dnsmasq
 
 - name: Post-Install | Consul monitoring
   when:
-    - configure_consul | lower == 'true'
+  - configure_consul | lower == 'true'
   block:
-      - name: Post-Install | Create consul dnsmasq service
-        template: src=service.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/{{ item.service.name }}.json
-        with_items: "{{ dnsmasq_consul }}"
-        notify: reload consul
+  - name: Post-Install | Create consul dnsmasq service
+    template: src=service.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/{{ item.service.name }}.json
+    with_items: '{{ dnsmasq_consul }}'
+    notify: reload consul
 
-      - name: Post-Install | Create consul DNS queries service
-        template: src=dns-queries.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/dns-queries.json
-        notify: reload consul
+  - name: Post-Install | Create consul DNS queries service
+    template: src=dns-queries.consul.json.j2 dest={{ dnsmasq_consul_services_path }}/dns-queries.json
+    notify: reload consul
