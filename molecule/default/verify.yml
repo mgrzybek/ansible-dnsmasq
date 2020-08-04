@@ -1,0 +1,6 @@
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Test DNS service
+    command: host google.fr 127.0.0.1
+

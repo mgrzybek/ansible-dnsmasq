@@ -1,0 +1,13 @@
+- name: Converge
+  hosts: all
+  tasks:
+  - name: Include ../../..
+    include_role:
+      name: ../../..
+  vars:
+    dnsmasq_main_conf:
+      cache_size: 150
+      servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
